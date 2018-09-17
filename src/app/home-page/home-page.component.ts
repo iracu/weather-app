@@ -1,17 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {WeatherService} from '../weather.service';
 
-interface PostData {
-  id: number;
-  weather: [];
-}
-
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.sass']
 })
 export class HomePageComponent implements OnInit {
+  // City data to can select weather from specific city
   cityList = [
       {
         id: 665850,
@@ -25,7 +21,7 @@ export class HomePageComponent implements OnInit {
       },
       {
         id: 683508,
-        name: 'Bucuresci',
+        name: 'Bucuresti',
         country: 'RO'
       },
       {
@@ -35,25 +31,30 @@ export class HomePageComponent implements OnInit {
       }
   ];
 
+  // Default city ID
   cityID = 665850;
+
+  //API weather data
   weather;
 
+  // Injection weather Data services
   constructor( private weatherData: WeatherService) {}
 
+  // Load data by API on app running
   ngOnInit() {
       this.weatherData.getWeather( this.cityID )
           .subscribe((response: Response) => {
-            this.weather =  response.list;
-            console.log(this.weather);
-          });
+            this.weather =  response;
+      });
   }
 
+  // Load data by API for selected city
   selectCity ( id: number ) {
       this.cityID = id;
       this.weatherData.getWeather( this.cityID )
           .subscribe((response: Response) => {
-            this.weather = response.list;
-          });
+              this.weather = response;
+      });
   }
 
 }
